@@ -7,17 +7,17 @@ on: [push]
 
 jobs:
 
- Docker build:
+  Docker_build:
 
-    runs-on: ubuntu-latest
+      runs-on: ubuntu-latest
 
-    steps:
+      steps:
 
-    - name: Clone code
-      uses: actions/checkout@v7
+      - name: Clone code
+        uses: actions/checkout@v7
 
-    - name: Set up Docker 
-      uses: docker/setup-docker-actions@v5   
+      - name: Set up Docker 
+        uses: docker/setup-docker-actions@v5   
 
       # build the docker and have error cases 
 
