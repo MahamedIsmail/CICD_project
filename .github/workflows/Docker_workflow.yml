@@ -1,0 +1,26 @@
+# the goal build and push docker image 
+# deploy to dockerhub 
+
+name : Docker Build & Push
+
+on: [push]
+
+jobs:
+
+ Docker build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Clone code
+      uses: actions/checkout@v7
+
+    - name: Set up Docker 
+      uses: docker/setup-docker-actions@v5   
+
+      # build the docker and have error cases 
+
+
+
+  
