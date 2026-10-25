@@ -14,10 +14,10 @@ jobs:
       steps:
 
       - name: Clone code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7     # clone the code from the repo to the runner machine
 
       - name: Set up Docker 
-        uses: docker/setup-docker-actions@v5   
+        uses: docker/setup-docker-action@v5   # dowloads a specific version of docker and sets up the environment for it.     
 
       # build the docker and have error cases 
 
