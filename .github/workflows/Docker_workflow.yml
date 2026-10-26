@@ -31,7 +31,7 @@ jobs:
       - name : Build and push docker image
         uses: docker/build-push-action@v7
         with:
-          context: ${{defaultContext}}:${{env.subdirectory}}
+          context: " {{defaultContext}}:${{env.subdirectory}} " 
           push: true
           tags: ${{ vars.DOCKER_USERNAME }}/${{env.image_name}}
 
