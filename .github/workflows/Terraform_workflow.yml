@@ -19,7 +19,10 @@ jobs:
           tflint_version: ${{ env.tfli_v }} 
 
     - name: test version
-      run: tflint -v      
+      run: tflint -v 
+
+    - run: 
+          cd Task_2/Terraform_task   
 
     - name: Starts linter 
       run: | 
