@@ -26,5 +26,10 @@ jobs:
     - name: Runs Tflint
       run: tflint -f compact  
 
+    - name: debug 
+      run: |  
+        pwd
+        
+
            
 
