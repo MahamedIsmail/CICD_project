@@ -23,7 +23,7 @@ jobs:
 
     - name: Starts linter 
       run: | 
-          tflint --chdir=${{env.path}} -init
+          tflint --chdir=${{env.path}} 
           TFLINT_LOG=debug tflint
           tflint --init
           
@@ -34,7 +34,6 @@ jobs:
     - name: debug 
       run: |  
         pwd
-    
         TFLINT_LOG=debug tflint
         
 
