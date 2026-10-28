@@ -1,4 +1,4 @@
-name : Terraform_workflow
+name : Terraform_workflow.1
 
 on: [push]
 env:
