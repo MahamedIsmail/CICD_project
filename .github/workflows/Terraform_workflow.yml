@@ -1,0 +1,21 @@
+name : Terraform_workflow
+
+on: [push]
+env:
+ tfli_v: "v0.65.0"
+
+jobs:
+  Terraform_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: check out terrafrom code
+      uses: actions/checkout@v7
+    - name: setup Terraform linter
+      uses: terraform-linters/setup-tflint@v6
+      with:
+          tflint_version: ${{ env.tfli_v }} 
+
+    - name: test version
+      run: tfflint -v      
