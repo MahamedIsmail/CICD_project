@@ -3,6 +3,7 @@ name : Terraform_workflow
 on: [push]
 env:
  tfli_v: "v0.65.0"
+ path: "./Task_2/Terrafrom_task"
 
 jobs:
   Terraform_lint:
@@ -29,6 +30,7 @@ jobs:
     - name: debug 
       run: |  
         pwd
+        tflint --chdir=${{env.path}}
         TFLINT_LOG=debug tflint
         
 
