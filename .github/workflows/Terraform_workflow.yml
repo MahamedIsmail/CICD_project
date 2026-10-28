@@ -3,7 +3,7 @@ name : Terraform_workflow
 on: [push]
 env:
  tfli_v: "v0.65.0"
- path: "./Task_2/Terrafrom_task"
+ path: "Task_2/Terrafrom_task"
 
 jobs:
   Terraform_lint:
