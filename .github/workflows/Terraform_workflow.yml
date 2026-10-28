@@ -28,7 +28,7 @@ jobs:
           cd Task_2/Terraform_task  
           pwd
           tflint --init
-          tflint --chdir=${{env.path}} 
+        
           
 
     - name: Runs Tflint
