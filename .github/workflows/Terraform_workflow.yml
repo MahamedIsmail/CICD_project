@@ -18,4 +18,4 @@ jobs:
           tflint_version: ${{ env.tfli_v }} 
 
     - name: test version
-      run: tfflint -v      
+      run: tflint -v      
