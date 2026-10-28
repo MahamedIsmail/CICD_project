@@ -3,7 +3,6 @@ name : Terraform_workflow.1
 on: [push]
 env:
  tfli_v: "v0.65.0"
- path: "CICD_project/Task_2/Terraform_task"
 
 jobs:
   Terraform_lint:
@@ -13,6 +12,7 @@ jobs:
 
     - name: check out terrafrom code
       uses: actions/checkout@v7
+
     - name: setup Terraform linter
       uses: terraform-linters/setup-tflint@v6
       with:
@@ -24,15 +24,18 @@ jobs:
       
     - name: Starts linter 
       run: | 
-          TFLINT_LOG=debug tflint
+
           cd Task_2/Terraform_task  
           pwd
           tflint --init
-        
+          TFLINT_LOG=debug tflint
           
 
     - name: Runs Tflint
-      run: tflint -f compact  
+      run: |
+           tflint -f compact 
+           pwd
+           TFLINT_LOG=debug tflint 
 
     - name: debug 
       run: |  
