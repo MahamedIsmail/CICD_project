@@ -20,5 +20,11 @@ jobs:
     - name: test version
       run: tflint -v      
 
-    - name: display plugin configuration
-      run: cat ~/.tflint.d/plugins 
+    - name: Starts linter 
+      run: tflint --init
+
+    - name: Runs Tflint
+      run: tflint -f compact  
+
+           
+
