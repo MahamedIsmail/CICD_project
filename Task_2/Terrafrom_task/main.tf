@@ -6,12 +6,17 @@ required_providers{
     }
 }
 
+backend "s3" {
+    bucket="amz-remote-state-bkt"
+    key="Task_2/Terrafrom_task/terraform.tfstate"
+}
+
 
 }
 resource "aws_s3_bucket" "remote_state_storage" {
     bucket="amz-remote-state-bkt"
 
-    tags={
+    ags={
         project="cicd-project"
 }
 
