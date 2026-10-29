@@ -31,7 +31,7 @@ jobs:
 
     - name: Runs Tflint
       run: | 
-           tflint -f compact 
+           tflint --chdir -f compact 
            TFLINT_LOG=debug tflint  
 
 
