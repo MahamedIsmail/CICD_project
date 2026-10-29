@@ -31,7 +31,7 @@ jobs:
 
     - name: Runs Tflint
       run: | 
-           tflint --chdir -f compact 
+           tflint --chdir=${{env.path}} -f compact 
            TFLINT_LOG=debug tflint  
 
 
