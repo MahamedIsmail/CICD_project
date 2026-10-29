@@ -28,8 +28,7 @@ jobs:
     - name: Starts linter 
       run: | 
           pwd
-          ls 
-        
+          ls -R 
           TFLINT_LOG=debug tflint  
 
     - name: Runs Tflint
