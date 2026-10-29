@@ -29,7 +29,7 @@ jobs:
       run: | 
           pwd
           ls 
-          tflint --chdir=${{env.path}}  --init  
+        
           TFLINT_LOG=debug tflint  
 
     - name: Runs Tflint
@@ -45,5 +45,5 @@ jobs:
         TFLINT_LOG=debug tflint
         
 
-   # tflint --chdir=${{env.path}}
+   # tflint --chdir=${{env.path}}   tflint --chdir=${{ env.path }}  --init  
 
