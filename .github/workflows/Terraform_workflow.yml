@@ -42,9 +42,6 @@ jobs:
         TFLINT_LOG=debug tflint
          
 
-      #find with git has your tf files , so you can run and test what  what went wrong with your work flow, then write the readme and post it on linkdin then its 
-      # ecs projet baby 
+   
 
 
-
-''
