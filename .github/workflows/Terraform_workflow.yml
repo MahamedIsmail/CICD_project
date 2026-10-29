@@ -3,7 +3,7 @@ name : Terraform_workflow
 on: [push]
 env:
  tfli_v: "v0.65.0"
- path: "Task_2/Terrafrom_task"
+ path: "Task_2/Terraform_task"
 
 jobs:
   Terraform_lint:
@@ -28,10 +28,8 @@ jobs:
     - name: Starts linter 
       run: | 
           pwd
-          ls
-         
-           
-          tflint --init --help 
+          ls -r
+          tflint --chdir= ${{env.path}} --init  
           TFLINT_LOG=debug tflint  
 
     - name: Runs Tflint
