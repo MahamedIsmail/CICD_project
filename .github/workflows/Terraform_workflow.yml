@@ -1,10 +1,9 @@
-name : Terraform_workflow
+name : Terraform_workflow.1
 
 on: [push]
 env:
  tfli_v: "v0.65.0"
  path: "Task_2/Terraform_task"
-
 jobs:
   Terraform_lint:
     runs-on: ubuntu-latest
@@ -13,22 +12,21 @@ jobs:
 
     - name: check out terrafrom code
       uses: actions/checkout@v7
-
     - name: setup Terraform linter
       uses: terraform-linters/setup-tflint@v6
       with:
           tflint_version: ${{ env.tfli_v }} 
 
     - name: test version
-      run: |
-            tflint -v  
-            pwd
-            TFLINT_LOG=debug tflint    
+      run: tflint -v     
 
     - name: Starts linter 
       run: | 
           pwd
-          ls -R 
+          ls 
+          tflint --chdir=${{env.path}} --init
+          pwd
+          ls 
           TFLINT_LOG=debug tflint  
 
     - name: Runs Tflint
@@ -42,7 +40,11 @@ jobs:
         pwd
     
         TFLINT_LOG=debug tflint
-        
+         
 
-   # tflint --chdir=${{env.path}}   tflint --chdir=${{ env.path }}  --init  
+      #find with git has your tf files , so you can run and test what  what went wrong with your work flow, then write the readme and post it on linkdin then its 
+      # ecs projet baby 
 
+
+
+''
