@@ -28,7 +28,7 @@ jobs:
     - name: Starts linter 
       run: | 
           pwd
-          ls -r
+          ls 
           tflint --chdir=${{env.path}}  --init  
           TFLINT_LOG=debug tflint  
 
