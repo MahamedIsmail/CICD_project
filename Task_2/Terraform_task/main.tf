@@ -17,7 +17,7 @@ backend "s3" {
 
 locals {
   
-   bucket_name="my-orgfoo"
+   bucket_name="orgfoo"
 
 }
 
