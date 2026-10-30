@@ -2,9 +2,9 @@
 
 ## Purpose
 
-The challenge: write some Terraform code, add errors on purpose, and build a pipeline that **checks the code automatically on every push**, so mistakes are caught **before** anything is deployed.
+The challenge: write some Terraform code, add errors on purpose and build a pipeline that **checks the code automatically on every push**, so mistakes are caught **before** anything is deployed.
 
-This is the **CI (Continuous Integration)** part of the module. Nothing is deployed here: the pipeline only **reads and checks** the code. That also means it needs **no AWS credentials**.
+This is the **CI (Continuous Integration)** part of the CI/CD Task. Nothing is deployed here: the pipeline only **reads and checks** the code. That also means it needs **no AWS credentials**.
 
 **Tool used:** [TFLint](https://github.com/terraform-linters/tflint), a pluggable Terraform linter that finds:
 
