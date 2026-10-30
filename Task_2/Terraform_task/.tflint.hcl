@@ -8,5 +8,5 @@ plugin "aws" {
 rule "aws_s3_bucket_name" {
   enabled = true
   regex = "^[a-z\\-]+$"
-  prefix = "my-org:"
+  prefix = "my-org"
 }
