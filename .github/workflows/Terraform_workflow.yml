@@ -1,9 +1,9 @@
-name : Terraform_workflow.1
+name : Terraform_workflow.ref:main
 
 on: [push]
 env:
  tfli_v: "v0.65.0"
-
+ path: "Task_2/Terraform_task"
 jobs:
   Terraform_lint:
     runs-on: ubuntu-latest
@@ -13,35 +13,27 @@ jobs:
     - name: check out terrafrom code
       uses: actions/checkout@v7
 
-    - name: setup Terraform linter
+    - name: Setup Terraform lint
       uses: terraform-linters/setup-tflint@v6
       with:
           tflint_version: ${{ env.tfli_v }} 
 
-    - name: test version
-      run: tflint -v 
+    - name: Test version
+      run: tflint -v     
 
-      
-    - name: Starts linter 
+    - name: Start lint 
       run: | 
+          tflint --chdir=${{env.path}} --init
+          TFLINT_LOG=debug tflint --chdir=${{env.path}}
 
-          cd Task_2/Terraform_task  
-          pwd
-          tflint --init
-          TFLINT_LOG=debug tflint
-          
+    - name: Run Tflint
+      run: | 
+           tflint --chdir=${{env.path}} -f compact 
+           TFLINT_LOG=debug tflint --chdir=${{env.path}}
 
-    - name: Runs Tflint
-      run: |
-           tflint -f compact 
-           pwd
-           TFLINT_LOG=debug tflint 
 
-    - name: debug 
-      run: |  
-        pwd
-        TFLINT_LOG=debug tflint
-        
+         
 
-           
+   
+
 

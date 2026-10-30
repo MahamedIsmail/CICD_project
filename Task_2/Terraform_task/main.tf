@@ -1,4 +1,5 @@
 terraform {
+required_version = ">= 1.5.0"
 required_providers{
     aws= {
         source="hashicorp/aws"
@@ -9,6 +10,7 @@ required_providers{
 backend "s3" {
     bucket="amz-remote-state-bkt"
     key="Task_2/Terrafrom_task/terraform.tfstate"
+    region = "china"
 }
 
 
@@ -16,7 +18,7 @@ backend "s3" {
 resource "aws_s3_bucket" "remote_state_storage" {
     bucket="amz-remote-state-bkt"
 
-    ags={
+    tags={
         project="cicd-project"
 }
 
@@ -28,4 +30,3 @@ provider "aws" {
 }
 
 
-# make vpc, s3 bucket one for remote state mangement 
