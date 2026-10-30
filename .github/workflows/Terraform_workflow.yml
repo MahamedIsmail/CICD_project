@@ -12,6 +12,7 @@ jobs:
 
     - name: check out terrafrom code
       uses: actions/checkout@v7
+
     - name: setup Terraform linter
       uses: terraform-linters/setup-tflint@v6
       with:
@@ -27,19 +28,14 @@ jobs:
           tflint --chdir=${{env.path}} --init
           pwd
           ls 
-          TFLINT_LOG=debug tflint  
+          TFLINT_LOG=debug tflint --chdir=${{env.path}}
 
     - name: Runs Tflint
       run: | 
            tflint --chdir=${{env.path}} -f compact 
-           TFLINT_LOG=debug tflint  
+           TFLINT_LOG=debug tflint --chdir=${{env.path}}
 
 
-    - name: debug 
-      run: |  
-        pwd
-    
-        TFLINT_LOG=debug tflint
          
 
    
