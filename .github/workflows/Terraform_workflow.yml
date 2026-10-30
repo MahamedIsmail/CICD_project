@@ -24,12 +24,12 @@ jobs:
     - name: Start lint 
       run: | 
           tflint --chdir=${{env.path}} --init
-          TFLINT_LOG=debug tflint --chdir=${{env.path}}
+          
 
     - name: Run Tflint
       run: | 
            tflint --chdir=${{env.path}} -f compact 
-           TFLINT_LOG=debug tflint --chdir=${{env.path}}
+        #Debug command use it for debuging  TFLINT_LOG=debug tflint --chdir=${{env.path}}
 
 
          
