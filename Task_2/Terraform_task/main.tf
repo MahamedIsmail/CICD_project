@@ -10,13 +10,20 @@ required_providers{
 backend "s3" {
     bucket="amz-remote-state-bkt"
     key="Task_2/Terrafrom_task/terraform.tfstate"
-    region = "china"
+    region = "eu-north-1"
+}
+
+}
+
+locals {
+  
+   bucket_name="foo"
+
 }
 
 
-}
-resource "aws_s3_bucket" "remote_state_storage" {
-    bucket="amz-remote-state-bkt"
+resource "aws_s3_bucket" "Bucket_storage" {
+    bucket=local.bucket_name
 
     tags={
         project="cicd-project"
