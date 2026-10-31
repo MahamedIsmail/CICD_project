@@ -8,7 +8,7 @@ on: [push]
 env:
   USERNAME: ${{ vars.DOCKER_USERNAME }}
   TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  Image_name: simple-webapp:${{ github.sha }}
+  ID: simple-webapp:${{ github.sha }}
   subdirectory: Task_1
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
         with:
           context: " {{defaultContext}}:${{env.subdirectory}} " 
           push: true
-          tags: ${{ vars.DOCKER_USERNAME }}/${{env.Image_name}} # Creates the Docker image tag using the commit ID instead of a version number.
+          tags: ${{ vars.DOCKER_USERNAME }}/${{env.ID}} # Creates the Docker image tag using the commit ID instead of a version number.
       
       
 
