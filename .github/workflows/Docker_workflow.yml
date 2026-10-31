@@ -9,7 +9,7 @@ env:
   USERNAME: ${{ vars.DOCKER_USERNAME }}
   TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   ID: ${{ github.sha }}
-  image_name: simple-webapp:${env.ID}
+  image_name: simple-webapp:${{ env.ID }}
   subdirectory: Task_1
 
 jobs:
