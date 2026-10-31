@@ -8,7 +8,8 @@ on: [push]
 env:
   USERNAME: ${{ vars.DOCKER_USERNAME }}
   TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  image_name: simple-webapp:v1.0.0
+  ID: ${{ github.sha }}
+  image_name: simple-webapp:${env.ID}
   subdirectory: Task_1
 
 jobs:
