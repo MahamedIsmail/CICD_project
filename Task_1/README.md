@@ -1,10 +1,10 @@
 # Task 1 – Build and push a Docker image with GitHub Actions
 
-## Purpose
+## Objective
 
-The challenge: build a small web app, package it in a Docker image, and **push the image to Docker Hub automatically with GitHub Actions**, with no manual `docker push`.
+ Build a small web app, package it in a Docker image and **push the image to Docker Hub automatically with GitHub Actions**, with no manual `docker push`.
 
-This is the **CD (Continuous Delivery)** part of the module: every push to the repo builds a fresh image and publishes it to a registry, ready to be pulled and run anywhere.
+This is the **CD (Continuous Delivery)** part of the project: every push to the repo builds a fresh image and publishes it to a registry, ready to be pulled and run anywhere.
 
 **Result:** the image is published as [`mahamedismail01/simple-webapp`](https://hub.docker.com/r/mahamedismail01/simple-webapp) on Docker Hub.
 
@@ -28,7 +28,7 @@ CICD_project/
     │   ├── templates/        ← HTML page
     │   └── static/           ← images (logo)
     ├── Dockerfile
-    └── requirements.txt
+    └── requirements.txt      ←  Dependencies  file  
 ```
 
 ---
@@ -67,14 +67,16 @@ Triggered on every **push**. Steps:
 Key settings in the build-and-push step:
 
 ```yaml
-with:
-  context: "{{defaultContext}}:Task_1"
-  push: true
-  tags: ${{ vars.DOCKER_USERNAME }}/simple-webapp:latest
+ with:
+          context: " {{defaultContext}}:${{env.subdirectory}} " 
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/${{env.ID}} # Creates the Docker image tag using the commit ID instead of a version number.
+      
+      
 ```
 
 - **No `actions/checkout` needed.** The action uses the **Git context**: BuildKit downloads the repo itself, at the commit that triggered the workflow.
-- **`:Task_1`** makes the `Task_1` folder the root of the build, so Docker finds `Task_1/Dockerfile`.
+- **`Task_1(${{env.subdirectory}})`** makes the `Task_1` folder the root of the build, so Docker finds `Task_1/Dockerfile`.
 - **`tags`** is the image's full name. It decides **where** the image is pushed (no registry in front = Docker Hub).
 
 ### Result
@@ -120,8 +122,6 @@ docker run -d -p 3000:5000 mahamedismail01/simple-webapp:latest
 
 | Error | Cause | Fix / lesson |
 |---|---|---|
-| `Username and password required` | Secret and variable were created in the **wrong repo**, so the expressions were empty | Create them in the repo the workflow runs in. A missing secret silently becomes an empty value. |
-| `Identifier 'Docker build' is invalid` | Job ID contained a space | Job IDs may only use letters, numbers, `_` and `-`. Use `name:` for a display name with spaces. |
 | `failed to read dockerfile: no such file or directory` | After moving the app into `Task_1`, the build context was still the repo root | Point the context at the subfolder: `"{{defaultContext}}:Task_1"` |
 | Flask: `Could not import 'hello'` | The file ended up one folder deeper than `--app` expected, and the old image was still being run | Match `--app` to the real path, and **rebuild** the image after changes (`docker image inspect` shows the CMD actually stored in it) |
 | Page not reachable despite `-p` | Flask listens on `127.0.0.1` by default, which inside a container means "only the container itself" | Start Flask with `--host=0.0.0.0` |
@@ -132,19 +132,23 @@ docker run -d -p 3000:5000 mahamedismail01/simple-webapp:latest
 
 ![Failed run: Dockerfile not found]( Images/run-failed-dockerfile.png)
 
-**After:** with `context: "{{defaultContext}}:Task_1"`, the build finds the Dockerfile and pushes again.
+**After:** with `context: "{{defaultContext}}:${{env.subdirectory}}`, the build finds the Dockerfile and pushes again.
 
 ![Fixed run with the subfolder context]( Images/run-fixed-context.png)
 
 ![Docker Hub after the fix]( Images/dockerhub-repo-after-fix.png)
 
 ---
+## Things to consider
 
-## What I learned
+### Docker concepts
+* **Build context** = the files Docker can use during a build. It can be a local path (`docker build .`) or a Git URL (the Git context). `COPY . .` copies from the context into the image's working directory.
+* **Tags** = the image's full address (`registry/username/repo:tag`). With no registry in front, Docker uses Docker Hub. The repo is created automatically on the first push.
 
-- **Build context** (a Docker concept) = the files Docker can use during a build. It can be a **local path** (`docker build .`) or a **Git URL** (the Git context). `COPY . .` copies from the context into the image's working directory.
-- **Git context vs path context:** with the Git context, files created or changed by earlier steps are **ignored**, because the build uses the committed code. With `context: .` + `actions/checkout`, the build uses the runner's files.
-- **Tags** = the image's full address (`registry/username/repo:tag`). With no registry in front, Docker uses Docker Hub. The repo is created automatically on the first push.
-- **Login `registry` input:** chooses which registry to log in to. The default is Docker Hub, so I didn't need it.
-- **Secrets vs variables:** the token is a **secret** (masked), the username is a **variable** (visible, which makes logs easier to read).
-- **Least privilege:** the PAT only has the permissions it needs, and can be revoked at any time.
+### GitHub Actions
+* **Git context vs path context:** with the Git context, files created or changed by earlier steps are ignored, because the build uses the committed code. With `context: .` + `actions/checkout`, the build uses the runner's files.
+* **Login `registry` input:** chooses which registry to log in to. The default is Docker Hub, so it isn't needed.
+* **Secrets vs variables:** the token is a secret (masked), the username is a variable (visible, which makes logs easier to read).
+
+### Security
+* **Least privilege:** the PAT only has the permissions it needs, and can be revoked at any time.
