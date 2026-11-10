@@ -1,7 +1,6 @@
-# CICD projects  
-# CI/CD Project
+# CICD projects 
 
-Two small pipelines built with GitHub Actions: one that **checks** code (CI) and one that **builds and publishes** it (CD).
+Automating build and code checks with GitHub Actions: a Docker image pipeline (CD) and a Terraform linting pipeline (CI).
 
 | Task | What it does | Part of CI/CD |
 |---|---|---|
