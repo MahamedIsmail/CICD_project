@@ -1,14 +1,14 @@
 # Task 2 – Lint Terraform code automatically with GitHub Actions
 
-## Purpose
+## Objective
 
-The challenge: write some Terraform code, add errors on purpose and build a pipeline that **checks the code automatically on every push**, so mistakes are caught **before** anything is deployed.
+Write some Terraform code, add errors on purpose and build a pipeline that **checks the code automatically on every push**, so mistakes are caught **before** anything is deployed.
 
-This is the **CI (Continuous Integration)** part of the CI/CD Task. Nothing is deployed here: the pipeline only **reads and checks** the code. That also means it needs **no AWS credentials**.
+This is the **CI (Continuous Integration)** part of the project. Nothing is deployed here: the pipeline only **reads and checks** the code. That also means it needs **no AWS credentials**.
 
 **Tool used:** [TFLint](https://github.com/terraform-linters/tflint), a pluggable Terraform linter that finds:
 
-- possible errors for cloud providers (for example invalid values for AWS resources), through the **AWS ruleset** plugin
+- possible errors for cloud providers (for example invalid values for AWS resources), through the **Cloud providers ruleset** plugin
 - deprecated syntax and unused declarations, through the bundled **Terraform ruleset**
 - best practices and naming conventions
 
@@ -22,17 +22,12 @@ CICD_project/
 │   └── Terraform_workflow.yml   ← the pipeline
 └── Task_2/
     └── Terraform_task/
-        ├── main.tf              ← Terraform code (an S3 bucket)
+        ├── main.tf              ← Terraform code 
         └── .tflint.hcl          ← TFLint config: plugins and rules
 ```
 
 ---
 
-## Prerequisites
-
-None beyond the repo itself. Because the pipeline only lints the code, it doesn't talk to AWS, so **no secrets or credentials are needed**.
-
----
 
 ## The TFLint config (`.tflint.hcl`)
 
@@ -127,29 +122,15 @@ This is why testing before deployment matters. The linter enforces a naming stan
 ![Pipeline green after the fix](images/pipeline-green.png)
 
 ---
-
 ## Run it yourself
 
-**Locally** (inside `Task_2/Terraform_task`):
-
-```bash
-tflint --init     # install the plugins listed in .tflint.hcl
-tflint            # lint the .tf files in this folder
-```
-
-Debug what TFLint is doing (which config it loads, which plugins start):
-
-```bash
-TFLINT_LOG=debug tflint
-```
-
-**In the pipeline:** push a change, open the **Actions** tab, and check the **Run TFLint** step.
+Open this repo's **Actions** tab and pick any run. The **Run TFLint** step shows the results.
 
 ---
 
 ## Troubleshooting: what took forever, and what I learned
 
-The pipeline is short, but getting it to actually lint my files took a lot of debugging. These are the problems in the order I hit them.
+The pipeline is short, but getting it to actually lint my files took a bit of debugging. These are the problems in the order I hit them.
 
 ### 1. `tflint` couldn't find my files or config
 
@@ -157,7 +138,7 @@ My Terraform code lives two folders deep (`Task_2/Terraform_task`), but **TFLint
 
 ![chdir failed because of a wrong folder](images/tflint-chdir-failed.png)
 
-**Fix:** point every TFLint command at the folder with `--chdir=<folder>`. The folder name must match **exactly** (I had `Terrafrom` vs `Terraform` at one point).
+**Fix:** point every TFLint command at the folder with `--chdir=<folder>`. 
 
 ### 2. `--chdir` is not `cd`
 
@@ -188,42 +169,4 @@ Use default config
 
 In a multi-line `run: |` block, GitHub runs bash in fail-fast mode. When one command failed, the rest of the step (including my debug `pwd`/`ls`) **never ran**. Indenting lines doesn't group them either; bash ignores indentation.
 
-### 6. Small typos with confusing errors
 
-| Error | Cause |
-|---|---|
-| `tfflint: command not found` (exit code 127) | typo in the command name; exit code 127 always means "command not found" |
-| `--init is unknown option` | I wrote `-init` with one dash. Long options need **two** dashes (`--init`); one dash is for single letters (`-v`, `-f`) |
-| `cat: ~/.tflint.d/plugins: No such file or directory` | the plugin folder only exists **after** `--init` has installed something, and `cat` can't read folders anyway (use `ls`) |
-
-### 7. The folder vanished from the runner
-
-At one point `ls` on the runner showed `Task_1` but no `Task_2`: I had deleted it by mistake in an earlier commit. **The runner only gets what's committed.**
-
-```bash
-git log --oneline -- Task_2                            # find the commit that deleted it
-git restore --source=<deletion-commit>^ -- Task_2      # bring it back from the commit before
-```
-
-### 8. What TFLint does *not* check
-
-- **Formatting** (indentation, spacing) → that's `terraform fmt -check`
-- **Every argument being valid**, e.g. a typo like `ags` instead of `tags` → that's `terraform validate`
-- **Things no rule covers**, e.g. a wrong `region` in the `backend` block → only `terraform init` notices
-
-TFLint only checks what its rules cover. The three tools complement each other: **`fmt` for style, `validate` for correctness, TFLint for cloud errors and best practices.**
-
-### 9. Terraform state lessons (side quest)
-
-- `.terraform/terraform.tfstate` is **not** your state. It's the backend settings `terraform init` saved (bucket, key, region). The real state has a `"resources"` list and lives in the S3 backend.
-- The state file is only written to S3 on the first `apply`, not on `init`.
-- After changing the `backend` block, `init` asks for **`-reconfigure`** (switch, nothing to copy) or **`-migrate-state`** (copy existing state over).
-- Don't let a config **create the same bucket it stores its state in**. Create the state bucket separately.
-
----
-
-## Next improvements
-
-- Add `terraform fmt -check` and `terraform validate` (with `hashicorp/setup-terraform`) next to TFLint
-- Only run the workflow when Terraform files change, with a `paths` filter on `push`
-- Run the checks on **pull requests** too, so bad Terraform is blocked before it's merged
